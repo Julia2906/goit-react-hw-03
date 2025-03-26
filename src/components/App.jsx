@@ -18,13 +18,15 @@ const App = () => {
     contact.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const newContact = { id: nanoid(), name, number };
-  setContacts(prevContacts => [...prevContacts, newContact]);
+  const addContact = (name, number) => {
+    const newContact = { id: nanoid(), name, number };
+    setContacts(prevContacts => [...prevContacts, newContact]);
+  };
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm />
+      <ContactForm onAddContacts={addContact} />
       <SearchBox searchQuery={searchQuery} onSearch={setSearchQuery} />
       <ContactList contacts={filteredContacts} />
     </div>
