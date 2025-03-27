@@ -1,7 +1,7 @@
 import ContactForm from './ContactForm/ContactForm';
 import SearchBox from './SearchBox/SearchBox';
 import ContactList from './ContactList/ContactList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 
 const App = () => {
@@ -14,6 +14,10 @@ const App = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  useEffect(() => {
+    window.localStorage.setItem('saved-contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -23,12 +27,18 @@ const App = () => {
     setContacts(prevContacts => [...prevContacts, newContact]);
   };
 
+  const deleteContact = contactId => {
+    setContacts(prevContacts =>
+      prevContacts.filter(contact => contact.id !== contactId)
+    );
+  };
+
   return (
     <div>
       <h1>Phonebook</h1>
       <ContactForm onAddContacts={addContact} />
       <SearchBox searchQuery={searchQuery} onSearch={setSearchQuery} />
-      <ContactList contacts={filteredContacts} />
+      <ContactList contacts={filteredContacts} onDelete={deleteContact} />
     </div>
   );
 };
